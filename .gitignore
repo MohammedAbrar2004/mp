@@ -1,1 +1,29 @@
-backend\.env
+
+# Secrets / Credentials
+backend/secrets/
+*.json
+credentials.json
+token.json
+
+# Environment
+.env
+*.env
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Node / WhatsApp Sessions
+api/whatsapp/session/
+*.session
+
+# Media (generated)
+backend/media/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+api/whatsapp/session/
+backend/media/
