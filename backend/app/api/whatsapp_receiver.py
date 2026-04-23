@@ -6,6 +6,7 @@ Run from backend/:
     uvicorn app.api.whatsapp_receiver:app --host 127.0.0.1 --port 8000 --reload
 """
 import base64
+from email.mime import message
 import logging
 
 from fastapi import FastAPI, HTTPException, Request
@@ -36,6 +37,7 @@ async def whatsapp_webhook(request: Request):
         raise HTTPException(status_code=400, detail="Invalid JSON")
 
     # Decode base64 media → raw bytes so the connector can build PendingMedia
+    print("WEBHOOK HIT:", message.get("key", {}).get("id"))
     b64 = message.pop("_file_bytes_b64", None)
     if b64:
         try:

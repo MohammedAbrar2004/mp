@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({path:"../../.env"});
 
 const {
   default: makeWASocket,
@@ -31,8 +31,12 @@ const seen = new Set(); // in-process dedup
 
 async function processMessage(msg) {
   const chatId = msg.key.remoteJid;
-  if (TARGET_CHATS.length > 0 && !TARGET_CHATS.includes(chatId)) return;
-
+  //console.log("PROCESSING:", chatId);
+  if (TARGET_CHATS.length > 0 && !TARGET_CHATS.includes(chatId))
+    {
+      //console.log("SKIPPED BY FILTER:", chatId);
+      return;
+    }
   if (seen.has(msg.key.id)) return;
   seen.add(msg.key.id);
 
@@ -43,6 +47,7 @@ async function processMessage(msg) {
   let documentMessage = null;
   let caption = "";
 
+  console.log("Incoming message from:", msg.key.remoteJid);
   // Modern WA: document sent with caption arrives as documentWithCaptionMessage.
   if (body.documentWithCaptionMessage) {
     const inner = body.documentWithCaptionMessage.message || {};
@@ -102,6 +107,7 @@ async function processMessage(msg) {
   }
 
   try {
+    console.log("SENDING TO BACKEND:", RECEIVER_URL);
     await axios.post(RECEIVER_URL, payload, { timeout: 10000 });
     console.log(`[WA] Forwarded ${msg.key.id}`);
   } catch (err) {
@@ -150,8 +156,15 @@ async function connect() {
   });
 
   sock.ev.on("messages.upsert", async ({ messages, type }) => {
-    if (type !== "notify") return; // skip history sync
+    
+    if (type !== "notify") return; 
+    // if (!msg.message) return;
+    // if (msg.key.fromMe) return;// skip history sync
     for (const msg of messages) {
+      console.log("MSG:", {
+      id: msg.key.id,
+      chat: msg.key.remoteJid
+    });
       if (!msg.key.fromMe) await processMessage(msg);
     }
   });

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from typing import Optional
 
 # Load environment variables
-load_dotenv(os.path.join(os.path.dirname(__file__), '../../.env'))
+load_dotenv(os.path.join(os.path.dirname(__file__), '../../../.env'))
 
 
 def get_connection():

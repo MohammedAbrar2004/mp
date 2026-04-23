@@ -1,69 +1,33 @@
 # 📌 instruction.md (FOR AI AGENT)
+EchoMind Development Instructions (AI Agent Guide)
+🎯 OBJECTIVE
 
-# EchoMind Development Instructions (AI Agent Guide)
+Build EchoMind as a modular, decoupled, testable ingestion + preprocessing system.
 
----
+We do NOT build everything at once.
+We build layer by layer, fully test, then move forward.
 
-# 🎯 OBJECTIVE
-
-Build EchoMind as a **modular, decoupled, testable ingestion system**.
-
-We are NOT building everything at once.
-We build **one connector at a time**, integrate it with the pipeline, test fully, then move forward.
-
----
-
-# 🧱 PROJECT SETUP
-
-## Environment
-
-* Python environment name: `mp`
-* Database name: `mp`
-* Backend path: `mp/backend/`
-
----
-
-## Step 1 — Virtual Environment
-
-```bash
+🧱 PROJECT SETUP
+Environment
+Python environment: mp
+Database: mp
+Backend path: mp/backend/
+Step 1 — Virtual Environment
 conda activate mp
-```
+Step 2 — Database Setup
+PostgreSQL already installed
+Database mp already created
 
----
+Run:
 
-## Step 2 — Database Setup
-
-* PostgreSQL is already installed
-* Database `mp` is already created manually
-
-Next steps:
-
-1. Create `schema.sql`
-2. Create `init_db.py`
-3. Run:
-
-```bash
 python app/db/init_db.py
-```
-
----
-
-## Step 3 — Folder Structure
-
-### Root Structure
-
-```text
+Step 3 — Folder Structure
+Root
 mp/
 ├── backend/
 ├── api/
 ├── frontend/
-```
-
----
-
-### Backend Structure
-
-```text
+Backend
 backend/
 ├── app/
 │   ├── connectors/
@@ -76,91 +40,37 @@ backend/
 ├── pipelines/
 ├── media/
 ├── tests/
-```
-
----
-
-### Media Structure
-
-```text
-media/
-├── audio/
-└── documents/
-```
-
----
-
-### API Layer (Node Services)
-
-```text
-api/
-├── whatsapp/
-├── (future: gmail, gmeet, etc.)
-```
-
----
-
-# ⚙️ DEVELOPMENT PHILOSOPHY
-
-* Build **module by module**
-* Each connector works **independently**
-* No tight coupling between components
-* Test everything in isolation before integration
-
----
-
-# 🔥 CORE DESIGN PRINCIPLES
-
-* Connectors DO NOT write to DB
-* Connectors DO NOT save media
-* Pipeline handles ALL side-effects
-* MediaService handles file storage
-* Repository layer handles DB writes
-* Database is the single source of truth
-
----
-
-# 🧩 CORE COMPONENTS
-
-## 1. NormalizedInput
-
-* Universal data contract
-* All connectors must return this format
-
----
-
-## 2. PendingMedia
-
-* Raw media emitted by connectors
-* Contains bytes + metadata
-* Not yet saved
-
----
-
-## 3. MediaService
-
-* ONLY component allowed to:
-
-  * write files
-  * manage media folders
-
----
-
-## 4. Pipeline (CRITICAL)
-
-* Single, reusable, connector-agnostic system
-* Accepts `List[NormalizedInput]`
-* Handles:
-
-  * media saving
-  * DB writes
-
----
-
-# 🔁 SYSTEM DATA FLOW
-
-```text
-External Source (WhatsApp / Gmail / etc.)
+⚙️ DEVELOPMENT PHILOSOPHY
+Build module by module
+Keep components decoupled
+Test each module independently
+Avoid premature complexity
+🔥 CORE DESIGN PRINCIPLES
+Connectors DO NOT write to DB
+Connectors DO NOT save media
+Pipeline handles ALL side-effects
+Services handle logic
+DB is the single source of truth
+Raw data must NEVER be modified
+🧩 CORE COMPONENTS
+1. NormalizedInput
+Universal contract
+All connectors must return this
+2. PendingMedia
+Raw media from connectors
+Not yet persisted
+3. MediaService
+Only component allowed to:
+save files
+manage media directories
+4. Ingestion Pipeline
+Accepts List[NormalizedInput]
+Handles:
+media saving
+DB writes
+deduplication
+🔁 SYSTEM DATA FLOW (CURRENT)
+External Source
         ↓
 Connector (pure)
         ↓
@@ -168,213 +78,193 @@ NormalizedInput + PendingMedia
         ↓
 Pipeline
         ↓
-MediaService → saves files
+MediaService
         ↓
-Repository → writes to DB
-```
-
----
-
-# 🧠 CONNECTOR RULES (STRICT)
+Repository → DB write
+🧠 CONNECTOR RULES (STRICT)
 
 Connectors MUST:
 
-* Return:
-
-  * `NormalizedInput`
-  * `PendingMedia` (if media exists)
+return NormalizedInput
+emit PendingMedia if applicable
 
 Connectors MUST NOT:
 
-* write to DB
-* save files
-* call services
-* contain business logic
-
----
-
-# 🧠 PIPELINE RULES (STRICT)
+write to DB
+save files
+call services
+contain business logic
+🧠 PIPELINE RULES (STRICT)
 
 Pipeline MUST:
 
-* Be reusable for ALL connectors
-* Be completely connector-agnostic
-* Handle all side-effects
+be connector-agnostic
+handle all side-effects
 
 Pipeline MUST NOT:
 
-* contain connector-specific logic
-* assume data source
-* extract raw data
+contain source-specific logic
+perform processing/cleaning
+🧠 MEDIA RULES
+Connectors → emit PendingMedia
+Pipeline → calls MediaService
+MediaService → saves files
 
----
+Restrictions:
 
-# 🧠 MEDIA RULES
+No .bin files
+MIME → extension mapping required
+PDFs/DOCX → documents/
+Audio → audio/
+🗄️ DATABASE RULES
+Use repository layer only
+No raw SQL in connectors
+Core tables:
+memory_chunks
+media_files
+🧪 TESTING STRATEGY
 
-* Connectors → emit `PendingMedia`
-* Pipeline → calls `MediaService.save_pending()`
-* MediaService → writes files
+For each module:
 
-### Restrictions:
+Unit Test
+Integration Test
+Manual verification
+🚫 DO NOT
+Couple connectors
+Mix ingestion with processing
+Modify connectors without approval
+Over-engineer early
+Build scheduler yet
+🔁 DEVELOPMENT SEQUENCE (UPDATED)
+Phase 1 — Connectors (COMPLETED)
+WhatsApp ✔
+Gmail ✔
+Calendar ✔
+Phase 2 — Ingestion Pipeline (COMPLETED)
+Media handling ✔
+DB writes ✔
+Deduplication ✔
+Phase 3 — Preprocessing Layer (CURRENT)
 
-* No `.bin` files allowed
-* Must use MIME → extension mapping
-* PDFs + Word → `documents/`
-* Audio → `audio/`
+This is the next layer after ingestion.
 
----
+⚙️ PREPROCESSING LAYER RULES (CRITICAL)
 
-# 🗄️ DATABASE RULES
+This layer operates on:
 
-* Use repository layer ONLY
-* No raw SQL inside connectors
-* Core tables:
+memory_chunks
+media_files
+⚠️ CORE PRINCIPLES
+Services must be independent
+Services must be stateless
+Services must be idempotent
+Services must be retryable
+Failures must NOT cascade
+No modification of connectors
+🔧 SERVICES TO BUILD
+1. Media Processing Service
 
-  * `memory_chunks`
-  * `media_files`
+Input:
 
----
+media_files.local_path
 
-# 🧪 TESTING STRATEGY
+Output:
 
-For EACH module:
+extracted_content
 
-1. Unit Test
+Supports:
 
-   * Test connector independently
+PDF
+DOCX
+Audio
+2. Cleaning Service
 
-2. Integration Test
+Input:
 
-   * Connector + Pipeline + DB
+memory_chunks.raw_content
+media_files.extracted_content
 
-3. Manual Test
+Output:
 
-   * Run script + verify DB + files
+memory_chunks.content
+media_files.cleaned_content
 
----
+Rules:
 
-# 🚫 DO NOT
+Generic cleaning (not email-specific)
+Use local LLM
+3. Salience Service
 
-* Couple connectors together
-* Mix ingestion with processing
-* Save media inside connectors
-* Write DB logic inside connectors
-* Over-engineer early
-* Build scheduler yet
+Input:
 
----
+cleaned content
+metadata
+media presence
 
-# 🔁 DEVELOPMENT SEQUENCE (FINAL)
+Output:
 
-## Phase 1 — WhatsApp Connector (PURE)
+initial_salience
+4. Embedding Service
 
-* Real-time ingestion
-* Extract messages + media
-* Output `NormalizedInput + PendingMedia`
+Input:
 
----
+cleaned content
 
-## Phase 2 — Core Pipeline (GLOBAL)
+Output:
 
-* Accept `NormalizedInput`
-* Save media via MediaService
-* Insert into DB
+embedding vector
+🔁 PREPROCESSING FLOW
+DB (raw)
+   ↓
+Media Processing
+   ↓
+Cleaning Service
+   ↓
+Salience + Embedding (parallel)
+⚠️ IMPORTANT DESIGN DECISION
+Do NOT merge media into memory_chunks.content
 
----
+Instead:
 
-## Phase 3 — WhatsApp End-to-End Test
+memory_chunks.content → main content
+media_files.cleaned_content → attachments
 
-* Verify:
+Combine only at retrieval / semantic stage.
 
-  * DB entries
-  * media files saved
-  * correct normalization
+⚠️ FAILURE STRATEGY
+Each service runs independently
+Failures are logged
+Retry allowed
+Retry limits handled later (not now)
+⚠️ DATABASE EXTENSIONS
 
----
+memory_chunks:
 
-## Phase 4 — Gmail Connector
+content
+is_cleaned
+initial_salience (nullable)
 
-* Fetch inbox + sent
-* Extract attachments
-* Plug into SAME pipeline
+media_files:
 
----
-
-## Phase 5 — Calendar Connector
-
-* Fetch events
-* Normalize structured data
-* Plug into SAME pipeline
-
----
-
-## Phase 6 — Manual Connector
-
-* API-based ingestion
-* Accept text + media + metadata
-
----
-
-## Phase 7 — GMeet Connector
-
-* Fetch recordings/transcripts from Drive
-* Store metadata + media
-* No processing
-
----
-
-# 🎯 KEY PRINCIPLE
-
-> Build ONE connector → integrate with pipeline → fully test → move next
-
-NOT:
-
-```text
-All connectors → then pipeline ❌
-```
-
----
-
-# 📦 DEPENDENCY MANAGEMENT
-
-We DO NOT manually maintain requirements.txt.
-
-After modules stabilize:
-
-```bash
+extracted_content
+cleaned_content
+is_cleaned
+📦 DEPENDENCY MANAGEMENT
 pip install pipreqs
 pipreqs . --force
-```
-
----
-
-# 🎯 CURRENT FOCUS
+🎯 CURRENT FOCUS
 
 We are building:
 
-> **Layer 1 (Connectors) + Layer 2 (Ingestion Pipeline)**
+Preprocessing Layer (Post-ingestion)
+🧭 FINAL INSTRUCTION
 
-Starting with:
+Proceed in order:
 
-1. WhatsApp
-2. Gmail
-3. Calendar
-4. Manual
-5. GMeet
-
----
-
-# 🧭 FINAL INSTRUCTION
-
-Proceed strictly in order:
-
-1. Setup DB
-2. Build WhatsApp connector
-3. Build pipeline
-4. Test end-to-end
-5. Move to next connector
+Define contracts
+Update documentation
+Build services one by one
+Test each independently
+Integrate
 
 No shortcuts. No assumptions.
-
-there is a folder called reference which is strictly for referncing old working code, not copying it.
-READ ITS .md file
