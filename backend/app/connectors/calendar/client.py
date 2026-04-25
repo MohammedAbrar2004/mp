@@ -71,6 +71,8 @@ def fetch_upcoming_events(limit: int = 30) -> list[NormalizedInput]:
     all_events = []
     for cal in calendars:
         cal_id = cal["id"]
+        if cal_id.endswith("#holiday@group.v.calendar.google.com"):
+            continue
         events_result = (
             service.events()
             .list(

@@ -5,7 +5,7 @@ cd whatsapp
 node index.js 
 
 # manual connect endpoint:
-uvicorn app.api.manual_receiver:app --host 127.0.0.1 --port 8001 --reload
+python -m uvicorn app.api.whatsapp_receiver:app --host 127.0.0.1 --port 8000
 
 # Text only
 1. curl.exe -X POST http://localhost:8001/ingest -F "content=Meeting notes from today"

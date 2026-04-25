@@ -87,5 +87,9 @@ async def manual_ingest(
         logger.error("Manual ingestion failed: %s", e)
         raise HTTPException(status_code=500, detail="Ingestion failed — check server logs")
 
-    logger.info("Ingested manual chunk: %s (content_type=%s)", normalized.external_id, normalized.content_type)
+    logger.info(
+        "POST /ingest → 200  chunk_id=%s  content_type=%s",
+        normalized.external_id,
+        normalized.content_type,
+    )
     return {"status": "ok", "chunk_id": normalized.external_id}

@@ -21,6 +21,7 @@ Behavior:
     - Does NOT modify memory_chunks.
     - Idempotent: safe to call multiple times on the same file.
     - On failure: logs error and returns None (caller handles retry).
+    - Uses only stdlib (zipfile + xml.etree.ElementTree) — no lxml dependency.
 
 Trigger Condition (enforced by orchestrator):
     media_files.extracted_content IS NULL
@@ -30,11 +31,58 @@ Trigger Condition (enforced by orchestrator):
 
 import logging
 import os
+import zipfile
+import xml.etree.ElementTree as ET
 from typing import Optional
 
-import docx
-
 logger = logging.getLogger("echomind.preprocessing.media.docx")
+
+_W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+
+def _para_text(para_elem) -> str:
+    """Concatenate all w:t run texts within a single w:p element."""
+    return "".join(t.text or "" for t in para_elem.iter(f"{{{_W}}}t")).strip()
+
+
+def _extract_part_paragraphs(xml_bytes: bytes) -> list[str]:
+    """Return non-empty paragraph texts from a Word XML part (header or footer)."""
+    root = ET.fromstring(xml_bytes)
+    return [line for para in root.iter(f"{{{_W}}}p") if (line := _para_text(para))]
+
+
+def _extract_document(xml_bytes: bytes) -> tuple[list[str], list[str]]:
+    """
+    Parse word/document.xml and return (paragraph_lines, table_lines).
+    Iterates direct children of <w:body> so paragraphs inside tables are
+    captured only in table_lines, not duplicated in paragraph_lines.
+    """
+    root = ET.fromstring(xml_bytes)
+    body = root.find(f"{{{_W}}}body")
+    if body is None:
+        return [], []
+
+    para_lines: list[str] = []
+    table_lines: list[str] = []
+
+    for child in body:
+        if child.tag == f"{{{_W}}}p":
+            line = _para_text(child)
+            if line:
+                para_lines.append(line)
+        elif child.tag == f"{{{_W}}}tbl":
+            for row in child.iter(f"{{{_W}}}tr"):
+                cells = []
+                for cell in row.findall(f"{{{_W}}}tc"):
+                    cell_text = " ".join(
+                        _para_text(p) for p in cell.iter(f"{{{_W}}}p") if _para_text(p)
+                    )
+                    if cell_text:
+                        cells.append(cell_text)
+                if cells:
+                    table_lines.append(" | ".join(cells))
+
+    return para_lines, table_lines
 
 
 def extract_text_from_docx(local_path: str, mime_type: str) -> Optional[str]:
@@ -54,47 +102,35 @@ def extract_text_from_docx(local_path: str, mime_type: str) -> Optional[str]:
         return None
 
     try:
-        doc = docx.Document(local_path)
-        parts: list[str] = []
+        with zipfile.ZipFile(local_path) as zf:
+            names = zf.namelist()
+            parts: list[str] = []
 
-        # Headers
-        header_lines = []
-        for section in doc.sections:
-            for para in section.header.paragraphs:
-                line = para.text.strip()
-                if line:
-                    header_lines.append(line)
-        if header_lines:
-            parts.append("[HEADER]")
-            parts.extend(header_lines)
+            # Headers (word/header1.xml, word/header2.xml, ...)
+            header_lines: list[str] = []
+            for name in sorted(n for n in names if n.startswith("word/header")):
+                header_lines.extend(_extract_part_paragraphs(zf.read(name)))
+            if header_lines:
+                parts.append("[HEADER]")
+                parts.extend(header_lines)
 
-        # Paragraphs
-        content_lines = [para.text.strip() for para in doc.paragraphs if para.text.strip()]
-        if content_lines:
-            parts.append("[CONTENT]")
-            parts.extend(content_lines)
+            # Main body
+            if "word/document.xml" in names:
+                para_lines, table_lines = _extract_document(zf.read("word/document.xml"))
+                if para_lines:
+                    parts.append("[CONTENT]")
+                    parts.extend(para_lines)
+                if table_lines:
+                    parts.append("[TABLE]")
+                    parts.extend(table_lines)
 
-        # Tables
-        for table in doc.tables:
-            row_texts = []
-            for row in table.rows:
-                cells = [cell.text.strip() for cell in row.cells if cell.text.strip()]
-                if cells:
-                    row_texts.append(" | ".join(cells))
-            if row_texts:
-                parts.append("[TABLE]")
-                parts.extend(row_texts)
-
-        # Footers
-        footer_lines = []
-        for section in doc.sections:
-            for para in section.footer.paragraphs:
-                line = para.text.strip()
-                if line:
-                    footer_lines.append(line)
-        if footer_lines:
-            parts.append("[FOOTER]")
-            parts.extend(footer_lines)
+            # Footers (word/footer1.xml, word/footer2.xml, ...)
+            footer_lines: list[str] = []
+            for name in sorted(n for n in names if n.startswith("word/footer")):
+                footer_lines.extend(_extract_part_paragraphs(zf.read(name)))
+            if footer_lines:
+                parts.append("[FOOTER]")
+                parts.extend(footer_lines)
 
         text = "\n".join(parts).strip()
         if not text:

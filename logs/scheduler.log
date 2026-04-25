@@ -1,0 +1,759 @@
+2026-04-25 16:23:17  INFO      echomind.scheduler — ====================================================
+2026-04-25 16:23:17  INFO      echomind.scheduler — EchoMind Scheduler started
+2026-04-25 16:23:17  INFO      echomind.scheduler —   Gmail            every 30 min
+2026-04-25 16:23:17  INFO      echomind.scheduler —   Calendar         every 30 min
+2026-04-25 16:23:17  INFO      echomind.scheduler —   Preprocessing    every 60 min
+2026-04-25 16:23:17  INFO      echomind.scheduler — ====================================================
+2026-04-25 16:23:17  INFO      echomind.scheduler — >>> Starting Gmail
+2026-04-25 16:23:20  INFO      echomind.ingestion.gmail — Fetching emails (limit=50)...
+2026-04-25 16:23:20  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 16:23:38  INFO      echomind.ingestion.gmail — Fetched 50 emails
+2026-04-25 16:23:38  INFO      echomind.ingestion.gmail — Gmail ingestion complete — 50 items sent to pipeline
+2026-04-25 16:23:38  INFO      echomind.scheduler — <<< Gmail done (20.9s)
+2026-04-25 16:23:38  INFO      echomind.scheduler —     Next Gmail            at 16:53:38
+2026-04-25 16:23:38  INFO      echomind.scheduler — >>> Starting Calendar
+2026-04-25 16:23:38  INFO      echomind.ingestion.calendar — Fetching calendar events (±30 days, limit=50)...
+2026-04-25 16:23:38  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 16:23:40  INFO      echomind.ingestion.calendar — Fetched 19 events
+2026-04-25 16:23:41  INFO      echomind.ingestion.calendar — Calendar ingestion complete — 19 items sent to pipeline
+2026-04-25 16:23:41  INFO      echomind.scheduler — <<< Calendar done (2.5s)
+2026-04-25 16:23:41  INFO      echomind.scheduler —     Next Calendar         at 16:53:41
+2026-04-25 16:23:41  INFO      echomind.scheduler — >>> Starting Preprocessing
+2026-04-25 16:23:41  INFO      echomind.preprocessing.pipeline — === Preprocessing pipeline started ===
+2026-04-25 16:23:41  INFO      echomind.preprocessing.pipeline — Media extraction: 1 rows pending
+2026-04-25 16:23:41  INFO      echomind.preprocessing.media.pdf — Using pypdf extraction for 'C:\Users\abrar\Desktop\mp\backend\media\documents\00f49bec-d467-49c1-8a64-0ec865a17c63.pdf'
+2026-04-25 16:23:42  WARNING   echomind.preprocessing.media.pdf — pypdf returned too little text (0 chars) — falling back to OCR
+2026-04-25 16:23:42  WARNING   echomind.preprocessing.media.pdf — Fallback to OCR for 'C:\Users\abrar\Desktop\mp\backend\media\documents\00f49bec-d467-49c1-8a64-0ec865a17c63.pdf'
+2026-04-25 16:23:44  INFO      echomind.preprocessing.media.pdf — OCR extracted length: 1693
+2026-04-25 16:23:44  INFO      echomind.preprocessing.pipeline — Media extraction done: 1 ok, 0 skipped, 0 failed (2.9s)
+2026-04-25 16:23:44  INFO      echomind.preprocessing.pipeline — Chunk cleaning: 69 rows pending
+2026-04-25 16:23:44  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:23:44  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:23:44  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1569
+2026-04-25 16:23:44  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 845
+2026-04-25 16:23:44  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:23:48  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:23:50  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:23:54  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:23:56  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:24:00  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:00  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:24:00  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:24:00  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:24:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:24:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3780
+2026-04-25 16:24:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 2531
+2026-04-25 16:24:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:24:05  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:07  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:24:11  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:13  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:24:17  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:17  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:24:17  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:24:17  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:24:17  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:24:17  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 210
+2026-04-25 16:24:17  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 205
+2026-04-25 16:24:17  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:24:21  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:23  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:24:27  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:29  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:24:33  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:33  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:24:33  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:24:33  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:24:33  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:24:33  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 215
+2026-04-25 16:24:33  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 210
+2026-04-25 16:24:33  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:24:37  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:39  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:24:43  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:45  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:24:49  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:49  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:24:49  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:24:49  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:24:49  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:24:49  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2622
+2026-04-25 16:24:49  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 420
+2026-04-25 16:24:49  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:24:53  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:24:55  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:24:59  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:25:05  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:05  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:25:05  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:25:05  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:25:05  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:25:05  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7242
+2026-04-25 16:25:05  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1508
+2026-04-25 16:25:05  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:25:09  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:25:16  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:25:22  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:22  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:25:22  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:25:22  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:25:22  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:25:22  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 6518
+2026-04-25 16:25:22  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 4697
+2026-04-25 16:25:22  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:25:26  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:28  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:25:32  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:34  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:25:38  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:38  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:25:38  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:25:38  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:25:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:25:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3080
+2026-04-25 16:25:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 556
+2026-04-25 16:25:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:25:42  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:44  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:25:48  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:50  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:25:54  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:25:54  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:25:54  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:25:54  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:25:54  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:25:54  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4629
+2026-04-25 16:25:54  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 3333
+2026-04-25 16:25:54  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:25:58  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:26:04  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:06  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:26:10  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:10  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:26:10  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:26:10  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:26:10  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:26:10  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2702
+2026-04-25 16:26:10  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 684
+2026-04-25 16:26:10  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:26:14  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:16  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:26:20  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:22  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:26:27  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:27  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:26:27  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:26:27  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:26:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:26:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 720
+2026-04-25 16:26:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 648
+2026-04-25 16:26:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:26:31  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:33  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 16:26:37  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 2) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:39  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 3)
+2026-04-25 16:26:43  ERROR     app.preprocessing.services.cleaning.llm_cleaner — [LLM] Failed after 3 attempts — Last error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:43  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Input is None or empty — returning None
+2026-04-25 16:26:43  WARNING   app.preprocessing.services.cleaning.email_cleaning — LLM failed or returned invalid output — using heuristic result
+2026-04-25 16:26:43  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 16:26:43  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 16:26:43  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 720
+2026-04-25 16:26:43  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 648
+2026-04-25 16:26:43  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 16:26:47  WARNING   app.preprocessing.services.cleaning.llm_cleaner — [LLM] Retrying (attempt 1) — Error: ConnectionError: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError("HTTPConnection(host='localhost', port=11434): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-25 16:26:49  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 2)
+2026-04-25 20:31:10  INFO      echomind.scheduler — ====================================================
+2026-04-25 20:31:10  INFO      echomind.scheduler — EchoMind Scheduler started — cycle every 30 min
+2026-04-25 20:31:10  INFO      echomind.scheduler —   Cycle order: Gmail → Calendar → Preprocessing
+2026-04-25 20:31:10  INFO      echomind.scheduler — ====================================================
+2026-04-25 20:31:10  INFO      echomind.scheduler — >>> Cycle started at 20:31:10
+2026-04-25 20:31:10  INFO      echomind.scheduler —   >> Gmail
+2026-04-25 20:31:13  INFO      echomind.ingestion.gmail — Fetching emails (limit=50)...
+2026-04-25 20:31:13  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 20:31:36  INFO      echomind.ingestion.gmail — Fetched 50 emails
+2026-04-25 20:31:36  INFO      echomind.ingestion.gmail — Gmail ingestion complete — 50 items sent to pipeline
+2026-04-25 20:31:36  INFO      echomind.scheduler —   << Gmail done (25.8s)
+2026-04-25 20:31:36  INFO      echomind.scheduler —   >> Calendar
+2026-04-25 20:31:36  INFO      echomind.ingestion.calendar — Fetching calendar events (±30 days, limit=50)...
+2026-04-25 20:31:36  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 20:31:38  INFO      echomind.ingestion.calendar — Fetched 19 events
+2026-04-25 20:31:39  INFO      echomind.ingestion.calendar — Calendar ingestion complete — 19 items sent to pipeline
+2026-04-25 20:31:39  INFO      echomind.scheduler —   << Calendar done (2.4s)
+2026-04-25 20:31:39  INFO      echomind.scheduler —   >> Preprocessing
+2026-04-25 20:31:39  INFO      echomind.scheduler — Ollama already running
+2026-04-25 20:31:39  ERROR     echomind.scheduler —   << Preprocessing FAILED
+Traceback (most recent call last):
+  File "C:\Users\abrar\Desktop\mp\run_scheduler.py", line 135, in main
+    fn()
+  File "C:\Users\abrar\Desktop\mp\run_scheduler.py", line 104, in _run_preprocessing
+    from backend.app.preprocessing.orchestrator.preprocessing_pipeline import (
+  File "C:\Users\abrar\Desktop\mp\backend\app\preprocessing\orchestrator\preprocessing_pipeline.py", line 35, in <module>
+    from app.preprocessing.services.media.media_service import process_media_file
+  File "C:\Users\abrar\Desktop\mp\backend\app\preprocessing\services\media\media_service.py", line 33, in <module>
+    from .docx_processor import extract_text_from_docx
+  File "C:\Users\abrar\Desktop\mp\backend\app\preprocessing\services\media\docx_processor.py", line 35, in <module>
+    import docx
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\__init__.py", line 11, in <module>
+    from docx.api import Document
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\api.py", line 12, in <module>
+    from docx.package import Package
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\package.py", line 9, in <module>
+    from docx.opc.package import OpcPackage
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\opc\package.py", line 9, in <module>
+    from docx.opc.part import PartFactory
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\opc\part.py", line 9, in <module>
+    from docx.opc.oxml import serialize_part_xml
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\opc\oxml.py", line 14, in <module>
+    from lxml import etree
+  File "src/lxml/etree.pyx", line 75, in init lxml.etree
+ImportError: DLL load failed while importing _elementpath: An Application Control policy has blocked this file.
+2026-04-25 20:31:39  INFO      echomind.scheduler — <<< Cycle done (29.1s). Next cycle at 21:01:10
+2026-04-25 20:35:31  INFO      echomind.scheduler — ============================================================
+2026-04-25 20:35:31  INFO      echomind.scheduler — EchoMind Scheduler started
+2026-04-25 20:35:31  INFO      echomind.scheduler —   Pattern: Ingestion → 15 min wait → Preprocessing → 15 min wait → repeat
+2026-04-25 20:35:31  INFO      echomind.scheduler — ============================================================
+2026-04-25 20:35:31  INFO      echomind.scheduler — >>> Ingestion phase
+2026-04-25 20:35:31  INFO      echomind.scheduler —   >> Gmail
+2026-04-25 20:35:32  INFO      echomind.ingestion.gmail — Fetching emails (limit=50)...
+2026-04-25 20:35:32  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 20:35:56  INFO      echomind.ingestion.gmail — Fetched 50 emails
+2026-04-25 20:35:56  INFO      echomind.ingestion.gmail — Gmail ingestion complete — 50 items sent to pipeline
+2026-04-25 20:35:56  INFO      echomind.scheduler —   << Gmail done (24.8s)
+2026-04-25 20:35:56  INFO      echomind.scheduler —   >> Calendar
+2026-04-25 20:35:56  INFO      echomind.ingestion.calendar — Fetching calendar events (±30 days, limit=50)...
+2026-04-25 20:35:56  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 20:35:58  INFO      echomind.ingestion.calendar — Fetched 19 events
+2026-04-25 20:35:58  INFO      echomind.ingestion.calendar — Calendar ingestion complete — 19 items sent to pipeline
+2026-04-25 20:35:58  INFO      echomind.scheduler —   << Calendar done (1.8s)
+2026-04-25 20:35:58  INFO      echomind.scheduler —     Waiting 15 min before preprocessing (until 20:50:58)
+2026-04-25 20:37:19  INFO      echomind.scheduler — ============================================================
+2026-04-25 20:37:19  INFO      echomind.scheduler — EchoMind Scheduler started
+2026-04-25 20:37:19  INFO      echomind.scheduler —   Pattern: Ingestion → 15 min wait → Preprocessing → 15 min wait → repeat
+2026-04-25 20:37:19  INFO      echomind.scheduler — ============================================================
+2026-04-25 20:37:19  INFO      echomind.scheduler — >>> Ingestion phase
+2026-04-25 20:37:19  INFO      echomind.scheduler —   >> Gmail
+2026-04-25 20:37:20  INFO      echomind.ingestion.gmail — Fetching emails (limit=50)...
+2026-04-25 20:37:20  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 20:37:46  INFO      echomind.ingestion.gmail — Fetched 50 emails
+2026-04-25 20:37:46  INFO      echomind.ingestion.gmail — Gmail ingestion complete — 50 items sent to pipeline
+2026-04-25 20:37:46  INFO      echomind.scheduler —   << Gmail done (27.0s)
+2026-04-25 20:37:46  INFO      echomind.scheduler —   >> Calendar
+2026-04-25 20:37:46  INFO      echomind.ingestion.calendar — Fetching calendar events (±30 days, limit=50)...
+2026-04-25 20:37:46  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 20:37:48  INFO      echomind.ingestion.calendar — Fetched 19 events
+2026-04-25 20:37:48  INFO      echomind.ingestion.calendar — Calendar ingestion complete — 19 items sent to pipeline
+2026-04-25 20:37:48  INFO      echomind.scheduler —   << Calendar done (1.8s)
+2026-04-25 20:37:48  INFO      echomind.scheduler —     Waiting 15 min before preprocessing (until 20:52:48)
+2026-04-25 20:52:48  INFO      echomind.scheduler — >>> Preprocessing phase
+2026-04-25 20:52:48  INFO      echomind.scheduler —   >> Preprocessing
+2026-04-25 20:52:48  INFO      echomind.scheduler — Ollama already running
+2026-04-25 20:52:48  ERROR     echomind.scheduler —   << Preprocessing FAILED
+Traceback (most recent call last):
+  File "C:\Users\abrar\Desktop\mp\run_scheduler.py", line 124, in _run_phase
+    fn()
+  File "C:\Users\abrar\Desktop\mp\run_scheduler.py", line 104, in _run_preprocessing
+    from backend.app.preprocessing.orchestrator.preprocessing_pipeline import (
+  File "C:\Users\abrar\Desktop\mp\backend\app\preprocessing\orchestrator\preprocessing_pipeline.py", line 35, in <module>
+    from app.preprocessing.services.media.media_service import process_media_file
+  File "C:\Users\abrar\Desktop\mp\backend\app\preprocessing\services\media\media_service.py", line 33, in <module>
+    from .docx_processor import extract_text_from_docx
+  File "C:\Users\abrar\Desktop\mp\backend\app\preprocessing\services\media\docx_processor.py", line 35, in <module>
+    import docx
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\__init__.py", line 11, in <module>
+    from docx.api import Document
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\api.py", line 12, in <module>
+    from docx.package import Package
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\package.py", line 9, in <module>
+    from docx.opc.package import OpcPackage
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\opc\package.py", line 9, in <module>
+    from docx.opc.part import PartFactory
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\opc\part.py", line 9, in <module>
+    from docx.opc.oxml import serialize_part_xml
+  File "C:\Users\abrar\anaconda3\envs\mp\Lib\site-packages\docx\opc\oxml.py", line 14, in <module>
+    from lxml import etree
+  File "src/lxml/etree.pyx", line 75, in init lxml.etree
+ImportError: DLL load failed while importing _elementpath: An Application Control policy has blocked this file.
+2026-04-25 20:52:48  INFO      echomind.scheduler —     Waiting 15 min before next ingestion (until 21:07:48)
+2026-04-25 21:02:16  INFO      echomind.scheduler — ============================================================
+2026-04-25 21:02:16  INFO      echomind.scheduler — EchoMind Scheduler started
+2026-04-25 21:02:16  INFO      echomind.scheduler —   Pattern: Ingestion → 15 min wait → Preprocessing → 15 min wait → repeat
+2026-04-25 21:02:16  INFO      echomind.scheduler — ============================================================
+2026-04-25 21:02:16  INFO      echomind.scheduler — >>> Ingestion phase
+2026-04-25 21:02:16  INFO      echomind.scheduler —   >> Gmail
+2026-04-25 21:02:17  INFO      echomind.ingestion.gmail — Fetching emails (limit=50)...
+2026-04-25 21:02:17  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 21:02:39  INFO      echomind.ingestion.gmail — Fetched 50 emails
+2026-04-25 21:02:39  INFO      echomind.ingestion.gmail — Gmail ingestion complete — 50 items sent to pipeline
+2026-04-25 21:02:39  INFO      echomind.scheduler —   << Gmail done (23.2s)
+2026-04-25 21:02:39  INFO      echomind.scheduler —   >> Calendar
+2026-04-25 21:02:39  INFO      echomind.ingestion.calendar — Fetching calendar events (±30 days, limit=50)...
+2026-04-25 21:02:39  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 21:02:41  INFO      echomind.ingestion.calendar — Fetched 19 events
+2026-04-25 21:02:41  INFO      echomind.ingestion.calendar — Calendar ingestion complete — 19 items sent to pipeline
+2026-04-25 21:02:41  INFO      echomind.scheduler —   << Calendar done (2.1s)
+2026-04-25 21:02:41  INFO      echomind.scheduler —     Waiting 15 min before preprocessing (until 21:17:41)
+2026-04-25 21:04:09  INFO      echomind.scheduler — ============================================================
+2026-04-25 21:04:09  INFO      echomind.scheduler — EchoMind Scheduler started
+2026-04-25 21:04:09  INFO      echomind.scheduler —   Pattern: Ingestion → 15 min wait → Preprocessing → 15 min wait → repeat
+2026-04-25 21:04:09  INFO      echomind.scheduler — ============================================================
+2026-04-25 21:04:09  INFO      echomind.scheduler — >>> Ingestion phase
+2026-04-25 21:04:09  INFO      echomind.scheduler —   >> Gmail
+2026-04-25 21:04:09  INFO      echomind.ingestion.gmail — Fetching emails (limit=50)...
+2026-04-25 21:04:09  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 21:04:32  INFO      echomind.ingestion.gmail — Fetched 50 emails
+2026-04-25 21:04:32  INFO      echomind.ingestion.gmail — Gmail ingestion complete — 50 items sent to pipeline
+2026-04-25 21:04:32  INFO      echomind.scheduler —   << Gmail done (23.5s)
+2026-04-25 21:04:32  INFO      echomind.scheduler —   >> Calendar
+2026-04-25 21:04:32  INFO      echomind.ingestion.calendar — Fetching calendar events (±30 days, limit=50)...
+2026-04-25 21:04:32  INFO      googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-04-25 21:04:34  INFO      echomind.ingestion.calendar — Fetched 19 events
+2026-04-25 21:04:34  INFO      echomind.ingestion.calendar — Calendar ingestion complete — 19 items sent to pipeline
+2026-04-25 21:04:34  INFO      echomind.scheduler —   << Calendar done (2.2s)
+2026-04-25 21:04:34  INFO      echomind.scheduler —     Waiting 15 min before preprocessing (until 21:19:34)
+2026-04-25 21:19:34  INFO      echomind.scheduler — >>> Preprocessing phase
+2026-04-25 21:19:34  INFO      echomind.scheduler —   >> Preprocessing
+2026-04-25 21:19:34  INFO      echomind.scheduler — Ollama already running
+2026-04-25 21:19:35  INFO      echomind.preprocessing.pipeline — === Preprocessing pipeline started (cutoff 15:49:35) ===
+2026-04-25 21:19:35  INFO      echomind.preprocessing.pipeline — Media extraction: 4 rows pending
+2026-04-25 21:19:35  INFO      echomind.preprocessing.media.pdf — Using pypdf extraction for 'C:\Users\abrar\Desktop\mp\backend\media\documents\a04a01d5-a5c4-4c8c-bd89-7453fd611d44.pdf'
+2026-04-25 21:19:35  WARNING   echomind.preprocessing.media.pdf — pypdf returned too little text (0 chars) — falling back to OCR
+2026-04-25 21:19:35  WARNING   echomind.preprocessing.media.pdf — Fallback to OCR for 'C:\Users\abrar\Desktop\mp\backend\media\documents\a04a01d5-a5c4-4c8c-bd89-7453fd611d44.pdf'
+2026-04-25 21:19:37  INFO      echomind.preprocessing.media.pdf — OCR extracted length: 1693
+2026-04-25 21:19:38  INFO      echomind.preprocessing.media.audio — Loading Whisper 'base' model...
+2026-04-25 21:19:44  INFO      echomind.preprocessing.media.audio — Whisper model loaded
+2026-04-25 21:19:44  INFO      echomind.preprocessing.media.audio — Transcribing 'C:\Users\abrar\Desktop\mp\backend\media\audio\37d40630-fc9c-4eb3-9cdb-35d426bbfb29.ogg'
+2026-04-25 21:19:48  INFO      echomind.preprocessing.media.audio — Transcription complete for 'C:\Users\abrar\Desktop\mp\backend\media\audio\37d40630-fc9c-4eb3-9cdb-35d426bbfb29.ogg' (19 chars)
+2026-04-25 21:19:48  INFO      echomind.preprocessing.media.audio — Transcribing 'C:\Users\abrar\Desktop\mp\backend\media\audio\95b36b41-3e6a-439a-8394-5c48e3223aff.ogg'
+2026-04-25 21:19:52  INFO      echomind.preprocessing.media.audio — Transcription complete for 'C:\Users\abrar\Desktop\mp\backend\media\audio\95b36b41-3e6a-439a-8394-5c48e3223aff.ogg' (28 chars)
+2026-04-25 21:19:52  INFO      echomind.preprocessing.media.pdf — Using pypdf extraction for 'C:\Users\abrar\Desktop\mp\backend\media\documents\0fb878d0-226d-4dad-99a0-e2fae018087b.pdf'
+2026-04-25 21:19:52  INFO      echomind.preprocessing.media.pdf — pypdf extraction succeeded (3295 chars)
+2026-04-25 21:19:52  INFO      echomind.preprocessing.pipeline — Media extraction done: 4 ok, 0 skipped, 0 failed (17.6s)
+2026-04-25 21:19:52  INFO      echomind.preprocessing.pipeline — Chunk cleaning: 84 rows pending
+2026-04-25 21:19:52  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:19:52  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:19:52  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2931
+2026-04-25 21:19:52  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1105
+2026-04-25 21:19:52  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=551)
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=551)
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1569
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 845
+2026-04-25 21:20:36  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=570)
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=570)
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3780
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 2531
+2026-04-25 21:21:08  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=44)
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=44)
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 210
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 205
+2026-04-25 21:21:57  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=100)
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=100)
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 215
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 210
+2026-04-25 21:22:03  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:22:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=100)
+2026-04-25 21:22:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=99)
+2026-04-25 21:22:10  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:22:10  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:22:10  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2622
+2026-04-25 21:22:10  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 420
+2026-04-25 21:22:10  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=76)
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=75)
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7242
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1508
+2026-04-25 21:22:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=783)
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=782)
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 6518
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 4697
+2026-04-25 21:23:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=1408)
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=1407)
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3080
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 556
+2026-04-25 21:24:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=277)
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=276)
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4629
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 3333
+2026-04-25 21:24:19  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=962)
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=961)
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2702
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 684
+2026-04-25 21:25:03  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=344)
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=344)
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 720
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 648
+2026-04-25 21:25:21  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=427)
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=427)
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 720
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 648
+2026-04-25 21:25:40  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=427)
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=427)
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7314
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1562
+2026-04-25 21:25:54  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=1178)
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=1177)
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 5230
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 3813
+2026-04-25 21:26:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=969)
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=968)
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1424
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 783
+2026-04-25 21:27:32  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=684)
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=684)
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1813
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 688
+2026-04-25 21:28:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=212)
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=212)
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2095
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 897
+2026-04-25 21:28:23  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=209)
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=209)
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7462
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 5167
+2026-04-25 21:28:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=523)
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=522)
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1085
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 609
+2026-04-25 21:29:07  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=364)
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=364)
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7311
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1557
+2026-04-25 21:29:24  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=1157)
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=1156)
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 6451
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 4122
+2026-04-25 21:30:20  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=812)
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=812)
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1945
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1537
+2026-04-25 21:31:04  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=1109)
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=1109)
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1172
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 865
+2026-04-25 21:32:00  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=769)
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=769)
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 502
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 293
+2026-04-25 21:32:31  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=71)
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=71)
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2622
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 420
+2026-04-25 21:32:38  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=76)
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=75)
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3050
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 536
+2026-04-25 21:32:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=181)
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=181)
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 14
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 12
+2026-04-25 21:32:59  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=6)
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=5)
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 592
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 497
+2026-04-25 21:33:01  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=482)
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=482)
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3610
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 654
+2026-04-25 21:33:24  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=170)
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=170)
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2719
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 427
+2026-04-25 21:33:36  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=77)
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=77)
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 6324
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 4694
+2026-04-25 21:33:44  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=378)
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=377)
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1300
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 810
+2026-04-25 21:34:12  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=584)
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=584)
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4826
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 2755
+2026-04-25 21:34:42  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=736)
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=735)
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3058
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 536
+2026-04-25 21:35:35  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=181)
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=181)
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 747
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 707
+2026-04-25 21:35:47  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=543)
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=543)
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3459
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 536
+2026-04-25 21:36:15  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=186)
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=186)
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4366
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1734
+2026-04-25 21:36:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=811)
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=811)
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4495
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 3012
+2026-04-25 21:37:09  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=840)
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=840)
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 424
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 363
+2026-04-25 21:37:52  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=254)
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=254)
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 210
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 205
+2026-04-25 21:38:04  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=100)
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=99)
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 6363
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1311
+2026-04-25 21:38:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=947)
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=946)
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 2692
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 684
+2026-04-25 21:38:51  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=407)
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=407)
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4303
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 3280
+2026-04-25 21:39:11  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=712)
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=711)
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7211
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 1459
+2026-04-25 21:39:48  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=1250)
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=1249)
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 7837
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 5906
+2026-04-25 21:40:45  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=459)
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=459)
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 4917
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 722
+2026-04-25 21:41:14  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=162)
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=162)
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3620
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 2961
+2026-04-25 21:41:27  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=391)
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=390)
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 1057
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 662
+2026-04-25 21:41:56  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=274)
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=274)
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: email
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.email_cleaning — Cleaning email content
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (raw): 3147
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.email_cleaning — Email length (pre-cleaned): 629
+2026-04-25 21:42:18  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Calling model: mistral:7b-instruct-q4_0 (attempt 1)
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.llm_cleaner — [LLM] Raw response received (len=195)
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.llm_cleaner — [SANITIZE] Output accepted (len=194)
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: document
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.media_cleaning — Cleaning media content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.cleaning_service — Cleaning content type: text
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.text_cleaning — Cleaning text content
+2026-04-25 21:42:30  INFO      echomind.preprocessing.pipeline — Chunk cleaning done: 84 ok, 0 failed (1357.8s)
+2026-04-25 21:42:30  INFO      echomind.preprocessing.pipeline — Media cleaning: 4 rows pending
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.media_cleaning — Cleaning media content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.media_cleaning — Cleaning media content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.media_cleaning — Cleaning media content
+2026-04-25 21:42:30  INFO      app.preprocessing.services.cleaning.media_cleaning — Cleaning media content
+2026-04-25 21:42:30  INFO      echomind.preprocessing.pipeline — Media cleaning done: 4 ok, 0 skipped, 0 failed (0.0s)
+2026-04-25 21:42:30  INFO      echomind.preprocessing.pipeline — Salience scoring: 84 rows pending
+2026-04-25 21:42:30  INFO      echomind.preprocessing.pipeline — Salience scoring done: 84 ok, 0 skipped, 0 failed (0.0s)
+2026-04-25 21:42:30  INFO      echomind.preprocessing.pipeline — === Preprocessing pipeline complete ===
+2026-04-25 21:42:30  INFO      echomind.scheduler —   << Preprocessing done (1375.8s)
+2026-04-25 21:42:30  INFO      echomind.scheduler —     Waiting 15 min before next ingestion (until 21:57:30)

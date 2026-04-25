@@ -47,8 +47,10 @@ async def whatsapp_webhook(request: Request):
 
     result = connector.handle_message(message)
     if result is None:
-        return {"status": "skipped", "id": message.get("key", {}).get("id")}
+        msg_id = message.get("key", {}).get("id")
+        logger.info("POST /whatsapp/webhook → 200 skipped  id=%s", msg_id)
+        return {"status": "skipped", "id": msg_id}
 
     process([result])
-    logger.info("Ingested %s", result.external_id)
+    logger.info("POST /whatsapp/webhook → 200 ingested  id=%s", result.external_id)
     return {"status": "ok", "id": result.external_id}

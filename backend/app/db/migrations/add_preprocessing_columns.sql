@@ -10,3 +10,7 @@ ALTER TABLE memory_chunks
 ALTER TABLE media_files
     ADD COLUMN IF NOT EXISTS cleaned_content  TEXT,
     ADD COLUMN IF NOT EXISTS is_cleaned       BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- memory_chunks: salience computed flag
+ALTER TABLE memory_chunks
+    ADD COLUMN IF NOT EXISTS is_salience_computed BOOLEAN NOT NULL DEFAULT FALSE;
