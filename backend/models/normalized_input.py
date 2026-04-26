@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 from pydantic import BaseModel, field_validator
 
 _ALLOWED_CONTENT_TYPES = frozenset({
-    "text", "email", "document", "audio", "gmeet"
+    "text", "email", "document", "audio"
 })
 
 

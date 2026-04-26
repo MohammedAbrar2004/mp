@@ -3,7 +3,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from backend.app.preprocessing.services.cleaning.emoji_normalization import normalize_emojis
+from .emoji_normalization import normalize_emojis
 
 from .heuristic_rules import heuristic_clean
 from .llm_cleaner import clean_with_llm

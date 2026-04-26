@@ -22,13 +22,12 @@ def insert_memory_chunk(
     content_type: str,
     raw_content: str,
     timestamp: datetime,
-    session_id: Optional[str] = None,
     participants: Optional[Dict[str, Any]] = None,
     metadata: Optional[Dict[str, Any]] = None,
 ) -> Optional[str]:
     """
     Insert a new memory chunk into the database.
-    
+
     Args:
         conn: Database connection
         user_id: UUID of the user
@@ -37,7 +36,6 @@ def insert_memory_chunk(
         content_type: Type of content ('text', 'email', 'document', 'audio', 'gmeet')
         raw_content: Raw content string
         timestamp: When the event occurred
-        session_id: Optional session UUID
         participants: Optional dict of participants
         metadata: Optional additional metadata
     
@@ -58,7 +56,6 @@ def insert_memory_chunk(
                 user_id,
                 source_id,
                 external_message_id,
-                session_id,
                 timestamp,
                 participants,
                 content_type,
@@ -67,22 +64,21 @@ def insert_memory_chunk(
                 metadata,
                 created_at
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (source_id, external_message_id) DO NOTHING
             RETURNING id;
         """
-        
+
         cursor.execute(query, (
             memory_chunk_id,
             user_id,
             source_id,
             external_message_id,
-            session_id,
             timestamp,
             Json(participants) if participants else None,
             content_type,
             raw_content,
-            0.0,  # initial_salience default
+            0.0,
             Json(metadata) if metadata else None,
             datetime.utcnow()
         ))

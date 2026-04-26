@@ -23,6 +23,7 @@ start "EchoMind Scheduler" cmd /k "conda activate mp && cd /d "%~dp0" && python 
 
 echo.
 echo ============================================
+@REM echo  All 4 services started in separate windows.
 echo  All 4 services started in separate windows.
 echo.
 echo  Logs:

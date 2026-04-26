@@ -320,25 +320,38 @@ def _fetch_unscored_chunks(conn, cutoff) -> list[dict]:
             SELECT mc.id,
                    mc.content,
                    mc.metadata,
+
                    EXISTS(
                        SELECT 1 FROM media_files mf
-                       WHERE  mf.memory_chunk_id = mc.id
-                   ) AS has_media
-            FROM   memory_chunks mc
-            WHERE  mc.is_cleaned = true
-              AND  mc.is_salience_computed = false
-              AND  mc.created_at < %s
-              AND  NOT EXISTS (
-                       SELECT 1 FROM media_files mf
-                       WHERE  mf.memory_chunk_id = mc.id
-                         AND  mf.is_cleaned = false
-                   )
+                       WHERE mf.memory_chunk_id = mc.id
+                   ) AS has_media,
+                   (
+                       SELECT string_agg(mf.cleaned_content, ' ')
+                       FROM media_files mf
+                       WHERE mf.memory_chunk_id = mc.id
+                         AND mf.cleaned_content IS NOT NULL
+                         AND mf.cleaned_content <> ''
+                   ) AS media_content
+
+            FROM memory_chunks mc
+            WHERE mc.is_cleaned = true
+              AND mc.is_salience_computed = false
+              AND mc.created_at < %s
+
+              AND NOT EXISTS (
+                   SELECT 1 FROM media_files mf
+                   WHERE mf.memory_chunk_id = mc.id
+                     AND mf.is_cleaned = false
+               )
+
             ORDER BY mc.created_at
             """,
             (cutoff,),
         )
+
         cols = [d[0] for d in cur.description]
         return [dict(zip(cols, row)) for row in cur.fetchall()]
+
     finally:
         cur.close()
 
@@ -368,6 +381,7 @@ def _run_salience_scoring(conn, cutoff) -> None:
     For each cleaned chunk where is_salience_computed = false:
     call compute_salience() and write back initial_salience + is_salience_computed.
     """
+
     rows = _fetch_unscored_chunks(conn, cutoff)
     logger.info("Salience scoring: %d rows pending", len(rows))
     if not rows:
@@ -380,10 +394,21 @@ def _run_salience_scoring(conn, cutoff) -> None:
         chunk_id  = row["id"]
         content   = row["content"] or ""
         metadata  = row["metadata"] or {}
-        has_media = row["has_media"]
+        has_media    = row["has_media"]
+        media_content = row.get("media_content") or ""
+
+        combined_content = content
+        if media_content:
+            combined_content += "\n\n" + media_content
+
+        logger.debug(
+            "  chunk_id=%s content_len=%d media_len=%d",
+            chunk_id, len(content), len(media_content),
+        )
 
         try:
-            score = compute_salience(content, metadata, has_media)
+            score = compute_salience(combined_content, metadata, has_media)
+
             if score is None:
                 logger.warning("  salience returned None for chunk_id=%s", chunk_id)
                 skipped += 1

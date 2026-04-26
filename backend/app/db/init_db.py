@@ -41,7 +41,9 @@ def init_database():
         
         try:
             # Execute schema
-            cursor.execute(schema)
+            for stmt in schema.split(';'):
+                if stmt.strip():
+                    cursor.execute(stmt)
             conn.commit()
             
             # Verify tables were created
