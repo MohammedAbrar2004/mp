@@ -1,0 +1,146 @@
+
+--- chunk_id=e54f244f-6adb-42c3-ada4-dc0319b267f5 ---
+NO OUTPUT
+
+--- chunk_id=42e332f6-a925-4840-8605-9b72e94e1763 ---
+NO OUTPUT
+
+--- chunk_id=3319dcd1-fb78-4813-87ef-1450c99834fb ---
+{
+    "entities": [
+        {"name": "abrar", "type": "person"},
+        {"name": "echomind", "type": "project"}
+    ],
+    "event": {
+        "title": "Semantic Layer Design",
+        "summary": "Design notes on embeddings and salience scoring in EchoMind",
+        "event_type": "design",
+        "timestamp": "2026-04-24T00:30:00+05:30",
+        "keywords": ["embedding", "salience", "preprocessing", "semantic-search", "ingestion"]
+    },
+    "relationships": [
+        {"entity": "abrar", "role": "participant"},
+        {"entity": "echomind", "role": "project"}
+    ],
+    "refined_salience": 0.5
+}
+
+--- chunk_id=e54f244f-6adb-42c3-ada4-dc0319b267f5 ---
+NO OUTPUT
+
+--- chunk_id=609c32ad-7c51-414c-a5fd-0f1379fec0fe ---
+NO OUTPUT
+
+--- chunk_id=406593be-cf25-456e-afcf-423d43edbf92 ---
+NO OUTPUT
+
+--- chunk_id=06fd587e-c67c-4dc4-b469-8bbe4854c787 ---
+NO OUTPUT
+
+--- chunk_id=56bc868b-d755-4cb2-80fb-8c9e0a0d8162 ---
+{
+    "entities": [
+        {"name": "echomind", "type": "project"},
+        {"name": "users", "type": "key_table"},
+        {"name": "data_sources", "type": "key_table"},
+        {"name": "memory_chunks", "type": "key_table"},
+        {"name": "media_files", "type": "key_table"},
+        {"name": "pgvector", "type": "technology"},
+        {"name": "postgresql", "type": "technology"},
+        {"name": "fastapi", "type": "technology"},
+        {"name": "whatsapp", "type": "tool"},
+        {"name": "gmail", "type": "tool"},
+        {"name": "google-meet", "type": "tool"},
+        {"name": "ollama", "type": "tool"},
+        {"name": "github", "type": "tool"},
+        {"name": "authentication", "type": "topic"},
+        {"name": "deployment", "type": "topic"},
+        {"name": "testing", "type": "topic"},
+        {"name": "demo", "type": "topic"},
+        {"name": "schema-migration", "type": "task"},
+        {"name": "search-ranking-fix", "type": "task"},
+        {"name": "database_schema", "type": "concept"},
+        {"name": "salience", "type": "concept"},
+        {"name": "embedding", "type": "concept"},
+        {"name": "preprocessing", "type": "concept"},
+        {"name": "semantic-search", "type": "concept"},
+        {"name": "ingestion", "type": "concept"},
+        {"name": "lab", "type": "location"},
+        {"name": "ma'am_office", "type": "location"},
+        {"name": "canteen", "type": "location"},
+        {"name": "online", "type": "location"},
+        {"name": "abrar", "type": "person"},
+        {"name": "abdullah", "type": "person"},
+        {"name": "amaan", "type": "person"},
+        {"name": "ma'am", "type": "person"}
+    ],
+    "event": {
+        "title": "Database Schema Pushed",
+        "summary": "Key tables: users, data_sources, memory_chunks, media_files. The pgvector extension is required. Run the schema file with psql before starting the app. I've also added the seed script for the prototype user and data sources.",
+        "event_type": "decision",
+        "timestamp": "2026-04-22T00:30:00+05:30",
+        "keywords": ["database_schema", "pgvector", "psql", "fastapi", "whatsapp", "gmail", "google-meet", "ollama", "github"]
+    },
+    "relationships": [
+        {"entity": "abrar", "role": "participant"},
+        {"entity": "abdullah", "role": "participant"},
+        {"entity": "amaan", "role": "participant"},
+        {"entity": "ma'am", "role": "organizer"}
+    ],
+    "refined_salience": 0.5
+}
+
+--- chunk_id=5b1d1531-2bd1-4229-b50f-0e02c8b294f1 ---
+NO OUTPUT
+
+--- chunk_id=39b7bec7-3836-4519-b7fa-c7b6df84c3c0 ---
+{
+    "entities": [
+        {"name": "echomind", "type": "project"},
+        {"name": "abrar", "type": "person"},
+        {"name": "ma'am", "type": "person"},
+        {"name": "presentation", "type": "event"},
+        {"name": "tomorrow", "type": "date"},
+        {"name": "10:00 AM", "type": "time"}
+    ],
+    "event": {
+        "title": "Presentation tomorrow at 10:00 AM",
+        "summary": "We are ready for the presentation.",
+        "event_type": "meeting",
+        "timestamp": "2026-04-26T15:00:00+05:30",
+        "keywords": ["presentation", "ready", "tomorrow"]
+    },
+    "relationships": [
+        {"entity": "abrar", "role": "participant"},
+        {"entity": "ma'am", "role": "organizer"}
+    ],
+    "refined_salience": 0.9
+}
+
+--- chunk_id=a349f70f-950f-4b9f-8a16-eb8ebfec8e8e ---
+{
+  "entities": [
+    {
+      "name": "amaan",
+      "type": "person"
+    },
+    {
+      "name": "echomind",
+      "type": "project"
+    }
+  ],
+  "event": {
+    "title": "Preprocessing pipeline complete and tested.",
+    "summary": null,
+    "event_type": "milestone",
+    "timestamp": "2026-04-22T23:30:00+05:30",
+    "keywords": []
+  },
+  "relationships": [
+    {
+      "entity": "amaan",
+      "role": "participant"
+    }
+  ],
+  "refined_salience": 0.9
+}

@@ -35,3 +35,45 @@ python -m app.connectors.gmail.run_gmail_ingestion
 # Calendar
 cd backend
 python -m app.connectors.calendar.run_calendar_ingestion
+
+
+## FOR DB BACKUP
+1. connnect
+psql -U postgres
+enter password
+\c postgres
+
+2. backup1
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = 'mp'
+AND pid <> pg_backend_pid();
+
+CREATE DATABASE mp_pre_processing_backup WITH TEMPLATE mp;
+
+
+3. backup2
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = 'mp'
+AND pid <> pg_backend_pid();
+
+CREATE DATABASE mp_post_processing_backup WITH TEMPLATE mp;
+
+4. restore1
+\c postgres
+
+DROP DATABASE mp;
+
+CREATE DATABASE mp WITH TEMPLATE mp_pre_processing_backup;
+
+
+5. restore2
+\c postgres
+
+DROP DATABASE mp;
+
+CREATE DATABASE mp WITH TEMPLATE mp_post_processing_backup;
+
+to run the frontend-backend:
+uvicorn app.api.frontend_api.main:app --host 127.0.0.1 --port 8000 --reload

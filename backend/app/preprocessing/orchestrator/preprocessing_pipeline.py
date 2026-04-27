@@ -26,6 +26,7 @@ DB columns required (run migration add_preprocessing_columns.sql first):
     media_files:   cleaned_content, is_cleaned
 """
 
+import json
 import logging
 import time
 from datetime import datetime, timezone
@@ -36,6 +37,7 @@ from app.preprocessing.services.media.media_service import process_media_file
 from app.preprocessing.services.cleaning.cleaning_service import clean_content
 from app.preprocessing.services.cleaning.media_cleaning import clean_media_content
 from app.preprocessing.services.salience.salience_service import compute_salience
+from app.preprocessing.utils.participant_normalizer import normalize_participants
 
 logger = logging.getLogger("echomind.preprocessing.pipeline")
 
@@ -62,6 +64,7 @@ def run_preprocessing() -> None:
         _run_media_extraction(conn, batch_cutoff)
         _run_chunk_cleaning(conn, batch_cutoff)
         _run_media_cleaning(conn, batch_cutoff)
+        _normalize_chunk_participants(conn, batch_cutoff)
         _run_salience_scoring(conn, batch_cutoff)
     finally:
         close_connection(conn)
@@ -223,7 +226,43 @@ def _run_chunk_cleaning(conn, cutoff) -> None:
         ok, fail, time.monotonic() - t0,
     )
 
+def _normalize_chunk_participants(conn, cutoff):
+    """
+    Normalize participants for cleaned chunks.
+    """
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """
+            SELECT id, participants
+            FROM memory_chunks
+            WHERE is_cleaned = true
+              AND created_at < %s
+            """,
+            (cutoff,)
+        )
 
+        rows = cur.fetchall()
+
+        for chunk_id, participants in rows:
+            if not participants:
+                continue
+
+            normalized = normalize_participants(participants)
+
+            cur.execute(
+                """
+                UPDATE memory_chunks
+                SET participants = %s
+                WHERE id = %s
+                """,
+                (json.dumps(normalized), chunk_id)
+            )
+
+        conn.commit()
+
+    finally:
+        cur.close()
 # ---------------------------------------------------------------------------
 # Step 3 — Media cleaning
 # ---------------------------------------------------------------------------

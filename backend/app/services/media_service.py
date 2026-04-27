@@ -10,6 +10,7 @@ from models.normalized_input import PendingMedia
 
 
 _MIME_TO_MEDIA_TYPE: dict[str, str] = {
+    "audio/webm": "audio",
     "audio/ogg": "audio",
     "audio/mpeg": "audio",
     "audio/mp4": "audio",
@@ -20,6 +21,7 @@ _MIME_TO_MEDIA_TYPE: dict[str, str] = {
 }
 
 _MIME_TO_EXTENSION: dict[str, str] = {
+    "audio/webm": ".webm",
     "audio/ogg": ".ogg",
     "audio/mpeg": ".mp3",
     "audio/mp4": ".m4a",

@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/Users/abrar/.claude/plans/**)"
+      "Read(//c/Users/abrar/.claude/plans/**)",
+      "PowerShell(python -c \"import graphify; import sys; open\\('.graphify_python', 'w'\\).write\\(sys.executable\\)\" 2>$null)"
     ]
   }
 }

@@ -104,7 +104,8 @@ CREATE TABLE entities (
 
     entity_type TEXT CHECK (entity_type IN (
         'person','project','organization',
-        'tool','technology','topic','task'
+        'tool','technology','topic','task',
+        'location','file','concept'
     )),
 
     mention_count INTEGER DEFAULT 1,
@@ -150,7 +151,7 @@ CREATE TABLE entity_event_links (
 
     role TEXT CHECK (role IN (
         'participant','subject','organizer',
-        'mentioned','owner'
+        'mentioned','owner','assignee','reporter'
     )),
 
     created_at TIMESTAMPTZ DEFAULT NOW(),
