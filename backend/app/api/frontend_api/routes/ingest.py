@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, Form, UploadFile, File, HTTPException, BackgroundTasks
 
-from app.api.frontend_api.dependencies import get_db
+from app.api.frontend_api.dependencies import get_db, USER_ID
 from app.connectors.manual.connector import ManualConnector
 from models.normalized_input import PendingMedia
 from pipelines.ingestion_pipeline import process
@@ -12,6 +12,13 @@ from pipelines.ingestion_pipeline import process
 router = APIRouter(prefix="/ingest", tags=["ingest"])
 
 connector = ManualConnector()
+
+
+def _get_user_name(conn) -> str:
+    with conn.cursor() as cur:
+        cur.execute("SELECT name FROM users WHERE id = %s", (USER_ID,))
+        row = cur.fetchone()
+    return row[0] if row else "User"
 
 
 def _run_full_pipeline():
@@ -74,7 +81,7 @@ async def ingest_voice(
 
     normalized = connector.create_input(
         content="",
-        participants=["User"],
+        participants=[_get_user_name(conn)],
         metadata=metadata,
         media=[pending],
     )
@@ -127,7 +134,7 @@ async def ingest_document(
 
     normalized = connector.create_input(
         content=description,
-        participants=["User"],
+        participants=[_get_user_name(conn)],
         metadata=metadata,
         media=[pending],
     )

@@ -37,6 +37,7 @@ from app.preprocessing.services.media.media_service import process_media_file
 from app.preprocessing.services.cleaning.cleaning_service import clean_content
 from app.preprocessing.services.cleaning.media_cleaning import clean_media_content
 from app.preprocessing.services.salience.salience_service import compute_salience
+from app.preprocessing.services.embedding.embedding_service import generate_embedding
 from app.preprocessing.utils.participant_normalizer import normalize_participants
 
 logger = logging.getLogger("echomind.preprocessing.pipeline")
@@ -55,6 +56,7 @@ def run_preprocessing() -> None:
         2. Chunk cleaning    — fill memory_chunks.content + is_cleaned
         3. Media cleaning    — fill media_files.cleaned_content + is_cleaned
         4. Salience scoring  — fill memory_chunks.initial_salience + is_salience_computed
+        5. Embedding         — fill memory_chunks.embedding
     """
     batch_cutoff = datetime.now(timezone.utc)
     logger.info("=== Preprocessing pipeline started (cutoff %s) ===", batch_cutoff.strftime("%H:%M:%S"))
@@ -66,6 +68,7 @@ def run_preprocessing() -> None:
         _run_media_cleaning(conn, batch_cutoff)
         _normalize_chunk_participants(conn, batch_cutoff)
         _run_salience_scoring(conn, batch_cutoff)
+        _run_embedding_generation(conn, batch_cutoff)
     finally:
         close_connection(conn)
 
@@ -464,4 +467,96 @@ def _run_salience_scoring(conn, cutoff) -> None:
     logger.info(
         "Salience scoring done: %d ok, %d skipped, %d failed (%.1fs)",
         ok, fail, skipped, time.monotonic() - t0,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Step 5 — Embedding generation
+# ---------------------------------------------------------------------------
+
+def _fetch_chunks_needing_embeddings(conn, cutoff) -> list[dict]:
+    """Return chunks that are cleaned/scored but still missing embeddings."""
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """
+            SELECT mc.id,
+                   mc.content,
+                   (
+                       SELECT string_agg(mf.cleaned_content, ' ')
+                       FROM media_files mf
+                       WHERE mf.memory_chunk_id = mc.id
+                         AND mf.cleaned_content IS NOT NULL
+                         AND mf.cleaned_content <> ''
+                   ) AS media_content
+            FROM memory_chunks mc
+            WHERE mc.content IS NOT NULL
+              AND mc.content <> ''
+              AND mc.embedding IS NULL
+              AND mc.is_cleaned = true
+              AND mc.is_salience_computed = true
+              AND mc.created_at < %s
+            ORDER BY mc.created_at
+            """,
+            (cutoff,),
+        )
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+    finally:
+        cur.close()
+
+
+def _update_chunk_embedding(conn, chunk_id: str, embedding: list[float]) -> None:
+    cur = conn.cursor()
+    try:
+        vector_literal = "[" + ",".join(str(v) for v in embedding) + "]"
+        cur.execute(
+            """
+            UPDATE memory_chunks
+            SET embedding = %s::vector
+            WHERE id = %s
+            """,
+            (vector_literal, chunk_id),
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        cur.close()
+
+
+def _run_embedding_generation(conn, cutoff) -> None:
+    """Generate and persist embeddings for eligible chunks."""
+    rows = _fetch_chunks_needing_embeddings(conn, cutoff)
+    logger.info("Embedding generation: %d rows pending", len(rows))
+    if not rows:
+        return
+
+    ok = fail = skipped = 0
+    t0 = time.monotonic()
+
+    for row in rows:
+        chunk_id = row["id"]
+        content = row["content"] or ""
+        media_content = row.get("media_content") or ""
+        combined_content = content + ("\n\n" + media_content if media_content else "")
+
+        try:
+            embedding = generate_embedding(combined_content)
+            if embedding is None:
+                logger.warning("  embedding returned None for chunk_id=%s", chunk_id)
+                skipped += 1
+                continue
+
+            _update_chunk_embedding(conn, chunk_id, embedding)
+            logger.debug("  embedded chunk_id=%s dim=%d", chunk_id, len(embedding))
+            ok += 1
+        except Exception as e:
+            logger.error("  FAILED chunk_id=%s: %s", chunk_id, e)
+            fail += 1
+
+    logger.info(
+        "Embedding generation done: %d ok, %d skipped, %d failed (%.1fs)",
+        ok, skipped, fail, time.monotonic() - t0,
     )

@@ -24,6 +24,12 @@ export const healthCheck = () => request('GET', '/health');
 // ── Query ─────────────────────────────────────────────────────────────────────
 export const postQuery = (query) => request('POST', '/query', { query });
 
+export const postVoiceQuery = (audioBlob) => {
+  const fd = new FormData();
+  fd.append('file', audioBlob, 'query.webm');
+  return request('POST', '/query/voice', fd, true);
+};
+
 export const getQueryHistory = (limit = 20, offset = 0) =>
   request('GET', `/query/history?limit=${limit}&offset=${offset}`);
 

@@ -10,9 +10,40 @@ const {
 } = require("@whiskeysockets/baileys");
 const pino = require("pino");
 const qrcode = require("qrcode-terminal");
+const QRCode = require("qrcode");
+const http = require("http");
 const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
+
+// ────────────────────────────────────────────────────────────────────────────
+// QR HTTP server — serves latest QR as PNG on GET /qr (port 3001)
+// ────────────────────────────────────────────────────────────────────────────
+
+let _latestQR = null;
+
+const QR_PORT = process.env.QR_PORT || 3001;
+
+http.createServer(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
+  if (req.url === "/qr" && req.method === "GET") {
+    if (!_latestQR) {
+      res.writeHead(204); res.end(); return;
+    }
+    try {
+      const png = await QRCode.toBuffer(_latestQR, { type: "png", width: 256, margin: 2 });
+      res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "no-store" });
+      res.end(png);
+    } catch {
+      res.writeHead(500); res.end();
+    }
+    return;
+  }
+  res.writeHead(404); res.end();
+}).listen(QR_PORT, () => {
+  console.log(`[WA] QR server listening on port ${QR_PORT}`);
+});
 
 const RECEIVER_URL = process.env.RECEIVER_URL || "http://127.0.0.1:8000/whatsapp/webhook";
 const SESSION_PATH = process.env.SESSION_PATH || "./session";
@@ -137,10 +168,12 @@ async function connect() {
 
   sock.ev.on("connection.update", ({ connection, lastDisconnect, qr }) => {
     if (qr) {
+      _latestQR = qr;
       qrcode.generate(qr, { small: true });
-      console.log("[WA] Scan the QR code above to authenticate");
+      console.log("[WA] Scan the QR code above to authenticate (also available at http://localhost:3001/qr)");
     }
     if (connection === "open") {
+      _latestQR = null;
       console.log("[WA] Connected — listening for messages");
     }
     if (connection === "close") {

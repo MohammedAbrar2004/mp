@@ -75,5 +75,13 @@ DROP DATABASE mp;
 
 CREATE DATABASE mp WITH TEMPLATE mp_post_processing_backup;
 
+6. restore3
+\c postgres
+
+DROP DATABASE mp;
+
+CREATE DATABASE mp WITH TEMPLATE mp_complete_backup;
+
 to run the frontend-backend:
 uvicorn app.api.frontend_api.main:app --host 127.0.0.1 --port 8000 --reload
+

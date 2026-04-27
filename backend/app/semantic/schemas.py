@@ -12,7 +12,7 @@ class Entity(BaseModel):
 
 class Event(BaseModel):
     title: str
-    summary: str
+    summary: Optional[str] = None
     event_type: Literal["decision", "meeting", "task", "discussion", "milestone", "other"]
     timestamp: Optional[str] = None
     keywords: List[str] = Field(default_factory=list)

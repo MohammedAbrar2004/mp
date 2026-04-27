@@ -26,6 +26,51 @@ function formatRelativeTime(iso) {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
+const QR_URL = 'http://localhost:3001/qr';
+
+function WhatsAppQR() {
+  const [qrSrc, setQrSrc] = useState(null);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    let interval;
+    const poll = () => {
+      fetch(QR_URL, { cache: 'no-store' })
+        .then((r) => {
+          setChecking(false);
+          if (r.status === 200) {
+            setQrSrc(QR_URL + '?t=' + Date.now());
+          } else {
+            setQrSrc(null);
+          }
+        })
+        .catch(() => { setChecking(false); setQrSrc(null); });
+    };
+    poll();
+    interval = setInterval(poll, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="mb-4 p-3 border border-amber-400/20 bg-amber-400/5" style={{ borderRadius: '2px' }}>
+      <div className="flex items-center gap-2 mb-2">
+        <QrCode size={14} className="text-amber-400" />
+        <span className="text-xs text-amber-400 font-medium">QR Code Required</span>
+      </div>
+      <div className="w-40 h-40 bg-white flex items-center justify-center mx-auto" style={{ borderRadius: '2px' }}>
+        {checking ? (
+          <Loader2 size={20} className="animate-spin text-echo-muted" />
+        ) : qrSrc ? (
+          <img src={qrSrc} alt="WhatsApp QR" className="w-full h-full object-contain" />
+        ) : (
+          <span className="text-[10px] text-gray-400 font-mono text-center px-2">Start the bridge to generate QR</span>
+        )}
+      </div>
+      <p className="text-[10px] text-red-400 font-mono mt-2 text-center">Session expired. Re-authentication required.</p>
+    </div>
+  );
+}
+
 export default function ConnectorsView() {
   const [connectorList, setConnectorList] = useState([]);
   const [runsList, setRunsList] = useState([]);
@@ -124,16 +169,7 @@ export default function ConnectorsView() {
               </div>
 
               {conn.connector === 'whatsapp' && conn.status === 'auth_required' && (
-                <div className="mb-4 p-3 border border-amber-400/20 bg-amber-400/5" style={{ borderRadius: '2px' }}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <QrCode size={14} className="text-amber-400" />
-                    <span className="text-xs text-amber-400 font-medium">QR Code Required</span>
-                  </div>
-                  <div className="w-24 h-24 bg-echo-bg border border-echo-border flex items-center justify-center mx-auto" style={{ borderRadius: '2px' }}>
-                    <span className="text-[10px] text-echo-muted font-mono">Restart bridge to generate QR</span>
-                  </div>
-                  <p className="text-[10px] text-red-400 font-mono mt-2 text-center">Session expired. Re-authentication required.</p>
-                </div>
+                <WhatsAppQR />
               )}
 
               <div className="flex items-center gap-1 pt-3 border-t border-echo-border flex-wrap">

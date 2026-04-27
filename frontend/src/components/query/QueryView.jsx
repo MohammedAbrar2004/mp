@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Mic, MicOff, Clock, Sparkles, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
-import { postQuery, getQueryHistory } from '../../api/client';
+import { postQuery, postVoiceQuery, getQueryHistory } from '../../api/client';
 import SourceIcon from '../shared/SourceIcon';
 import { SourceBadge, ModelBadge } from '../shared/Badge';
 import SalienceBar from '../shared/SalienceBar';
@@ -26,7 +26,7 @@ export default function QueryView() {
   const [error, setError] = useState('');
   const inputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
-  const recognitionRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   const loadHistory = useCallback(() => {
     getQueryHistory(20, 0).then((data) => setHistory(data.queries || [])).catch(() => {});
@@ -53,33 +53,47 @@ export default function QueryView() {
     }
   };
 
-  const toggleRecording = () => {
+  const toggleRecording = async () => {
     if (isRecording) {
-      recognitionRef.current?.stop();
-      setIsRecording(false);
+      mediaRecorderRef.current?.stop();
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setError('Voice input is not supported in this browser.');
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      setError('Microphone access denied.');
       return;
     }
 
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-    recognitionRef.current = recognition;
+    audioChunksRef.current = [];
+    const recorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = recorder;
 
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setQuery((prev) => (prev ? `${prev} ${transcript}` : transcript));
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) audioChunksRef.current.push(e.data);
     };
-    recognition.onerror = () => setError('Voice recognition failed. Please type your query.');
-    recognition.onend = () => setIsRecording(false);
 
-    recognition.start();
+    recorder.onstop = async () => {
+      stream.getTracks().forEach((t) => t.stop());
+      const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+      setIsRecording(false);
+      setIsLoading(true);
+      setError('');
+      try {
+        const result = await postVoiceQuery(blob);
+        setActiveQuery(result);
+        setQuery('');
+        loadHistory();
+      } catch {
+        setError('Voice query failed. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    recorder.start();
     setIsRecording(true);
   };
 
