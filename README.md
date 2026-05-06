@@ -52,12 +52,12 @@ Process media (PDF, DOCX, audio)
 Clean and structure content
 Generate embeddings and salience
 
-# Layer 3 — Semantic Understanding (Future)
+# Layer 3 — Semantic Understanding
 Extract entities (people, tasks, events)
 Build knowledge graph
 Link relationships across sources
 
-# Layer 4 — Retrieval Engine (Future)
+# Layer 4 — Retrieval Engine
 Query past context intelligently
 Combine semantic + temporal search
 
